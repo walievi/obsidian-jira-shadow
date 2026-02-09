@@ -22,6 +22,14 @@ export const AVATAR_RESOLUTION = '16x16'
 export const COMMENT_REGEX = /^\s*#/
 export const JIRA_KEY_REGEX = '[A-Z][A-Z0-9_]*-[0-9]+'
 
+export interface ISavedQuery {
+    id: string
+    name: string
+    query: string
+    destination: string
+    fileColumns: string
+}
+
 export interface IJiraIssueSettings {
     accounts: IJiraIssueAccountSettings[]
     apiBasePath: string
@@ -38,6 +46,7 @@ export interface IJiraIssueSettings {
     logImagesFetch: boolean
     showColorBand: boolean
     showJiraLink: boolean
+    savedQueries: ISavedQuery[]
 
     // Legacy credentials
     host?: string
@@ -74,10 +83,12 @@ export interface IJiraIssueAccountSettings {
 export enum ESearchResultsRenderingTypes {
     TABLE = 'TABLE',
     LIST = 'LIST',
+    MENU = 'MENU',
 }
 export const SEARCH_RESULTS_RENDERING_TYPE_DESCRIPTION = {
     [ESearchResultsRenderingTypes.TABLE]: 'Table',
     [ESearchResultsRenderingTypes.LIST]: 'List',
+    [ESearchResultsRenderingTypes.MENU]: 'Menu',
 }
 
 export enum ESearchColumnsTypes {

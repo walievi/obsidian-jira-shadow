@@ -1,0 +1,89 @@
+import { MarkdownPostProcessorContext, setIcon, Notice } from "obsidian"
+import ObjectsCache from "../objectsCache"
+import JiraClient from "../client/jiraClient"
+import RC from "./renderingCommon"
+import { getAccountByAlias } from "../utils"
+import { syncIssueContent } from "./issueSync"
+import { ObsidianApp } from "../main"
+import { SearchView } from "../searchView"
+import { ISearchColumn } from "../interfaces/settingsInterfaces"
+
+export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx: MarkdownPostProcessorContext): Promise<void> => {
+    const lines = source.split('\n')
+    let key = ''
+    let accountAlias = ''
+    let lastSync = ''
+    let columnsString = ''
+
+    for (const line of lines) {
+        const parts = line.split(':')
+        const k = parts[0].trim()
+        const v = parts.slice(1).join(':').trim()
+        
+        if (k === 'key') key = v
+        if (k === 'account') accountAlias = v
+        if (k === 'last_sync') lastSync = v
+        if (k === 'columns') columnsString = v
+    }
+
+    if (!key) {
+        RC.renderSearchError(rootEl, 'Missing key', null)
+        return
+    }
+
+    const container = createDiv({ cls: 'jira-sync-container' })
+    container.style.display = 'flex'
+    container.style.alignItems = 'center'
+    container.style.gap = '10px'
+    container.style.marginBottom = '10px'
+    container.style.padding = '5px'
+    container.style.border = '1px solid var(--background-modifier-border)'
+    container.style.borderRadius = '4px'
+
+    const info = createSpan({ text: `Last sync: ${lastSync || 'Never'}`, parent: container })
+    info.style.fontSize = '0.8em'
+    info.style.color = 'var(--text-muted)'
+    info.style.flexGrow = '1'
+
+    const syncBtn = createEl('button', { text: 'Sync Now', parent: container })
+    setIcon(syncBtn, 'sync-small')
+    syncBtn.style.cursor = 'pointer'
+
+    syncBtn.onclick = async () => {
+        syncBtn.disabled = true
+        syncBtn.setText('Syncing...')
+        try {
+            const account = getAccountByAlias(accountAlias)
+            const issue = await JiraClient.getIssue(key, { account })
+            
+            // Re-use logic to update current file
+            // Need to know current file path or TFile
+            const file = ObsidianApp.vault.getAbstractFileByPath(ctx.sourcePath)
+            
+            let fileColumns: ISearchColumn[] = null
+            if (columnsString) {
+                try {
+                    fileColumns = SearchView.parseColumns(columnsString)
+                } catch (err) {
+                    console.warn('Failed to parse columns from sync block', err)
+                }
+            }
+
+            if (file) {
+                 await syncIssueContent(issue, file as any, fileColumns) 
+                 new Notice(`Jira Issue: ${key} synced successfully`)
+            } else {
+                 new Notice(`Jira Issue: Could not find current file`)
+            }
+
+        } catch (e) {
+            new Notice(`Jira Issue: Sync failed - ${e.message}`)
+            console.error(e)
+        } finally {
+            syncBtn.disabled = false
+            syncBtn.setText('Sync Now')
+        }
+    }
+
+    rootEl.replaceChildren(container)
+}

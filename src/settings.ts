@@ -37,6 +37,7 @@ export const DEFAULT_SETTINGS: IJiraIssueSettings = {
     ],
     logRequestsResponses: false,
     logImagesFetch: false,
+    savedQueries: [],
 }
 
 export const DEFAULT_ACCOUNT: IJiraIssueAccountSettings = {

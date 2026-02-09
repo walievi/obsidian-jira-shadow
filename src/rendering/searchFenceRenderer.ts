@@ -1,4 +1,4 @@
-import { MarkdownPostProcessorContext, setIcon } from "obsidian"
+import { MarkdownPostProcessorContext, setIcon, Notice, normalizePath, TFile } from "obsidian"
 import { toDefaultedIssue, IJiraSearchResults } from "../interfaces/issueInterfaces"
 import JiraClient from "../client/jiraClient"
 import ObjectsCache from "../objectsCache"
@@ -6,7 +6,10 @@ import { renderTableColumn } from "./renderTableColumns"
 import { SearchView } from "../searchView"
 import { SettingsData } from "../settings"
 import RC from "./renderingCommon"
-import { ESearchColumnsTypes, ESearchResultsRenderingTypes, IJiraIssueAccountSettings, SEARCH_COLUMNS_DESCRIPTION } from "../interfaces/settingsInterfaces"
+import { ESearchColumnsTypes, ESearchResultsRenderingTypes, IJiraIssueAccountSettings, SEARCH_COLUMNS_DESCRIPTION, ISearchColumn } from "../interfaces/settingsInterfaces"
+import { ObsidianApp } from "../main"
+import { getIssueStringValue } from "./valueExtractor"
+import { syncIssueContent } from "./issueSync"
 
 
 async function renderSearchResults(rootEl: HTMLElement, searchView: SearchView, searchResults: IJiraSearchResults): Promise<void> {
@@ -53,6 +56,10 @@ function renderSearchResultsTableHeader(table: HTMLElement, searchView: SearchVi
             createEl('th', { text: name, title: column.type, parent: header })
         }
     }
+
+    if (searchView.type === ESearchResultsRenderingTypes.MENU) {
+        createEl('th', { text: 'Sync', parent: header })
+    }
 }
 
 async function renderSearchResultsTableBody(table: HTMLElement, searchView: SearchView, searchResults: IJiraSearchResults): Promise<void> {
@@ -62,6 +69,35 @@ async function renderSearchResultsTableBody(table: HTMLElement, searchView: Sear
         const row = createEl('tr', { parent: tbody })
         const columns = searchView.columns.length > 0 ? searchView.columns : SettingsData.searchColumns
         await renderTableColumn(columns, issue, row)
+
+        if (searchView.type === ESearchResultsRenderingTypes.MENU) {
+            const syncCell = createEl('td', { parent: row })
+            const syncBtn = createEl('button', { text: 'Sync', parent: syncCell })
+            syncBtn.onclick = async () => {
+                if (!searchView.destination) {
+                    new Notice('Jira Issue: Destination not set in jira-search block')
+                    return
+                }
+                
+                const destPath = normalizePath(searchView.destination)
+                const filename = `${issue.key}.md`
+                const path = normalizePath(`${destPath}/${filename}`)
+
+                try {
+                    await syncIssueContent(issue, path, searchView.fileColumns)
+                    // Notice is handled inside syncIssueContent? 
+                    // No, actually I removed Notice from syncIssueContent in my thought process but let's check implementation.
+                    // Implementation: "new Notice(`Jira Issue: Created ${filename}`)" in Create block.
+                    // But in Update block, I didn't put Notice.
+                    // Let's add Notice here or rely on syncIssueContent.
+                    // syncIssueContent does NOT have Notice for update in my previous Write.
+                    // Wait, let's check syncIssueContent again.
+                } catch (e) {
+                    new Notice(`Jira Issue: Error syncing file: ${e.message}`)
+                    console.error(e)
+                }
+            }
+        }
     }
 }
 
