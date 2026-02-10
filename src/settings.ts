@@ -1,6 +1,6 @@
 import { App, Notice, PluginSettingTab, Setting, TextComponent } from 'obsidian'
 import JiraClient from './client/jiraClient'
-import { COLOR_SCHEMA_DESCRIPTION, EAuthenticationTypes, EColorSchema, ESearchColumnsTypes, IJiraIssueAccountSettings, IJiraIssueSettings, SEARCH_COLUMNS_DESCRIPTION } from './interfaces/settingsInterfaces'
+import { COLOR_SCHEMA_DESCRIPTION, EAuthenticationTypes, EColorSchema, IJiraIssueAccountSettings, IJiraIssueSettings } from './interfaces/settingsInterfaces'
 import type JiraIssuePlugin from './main'
 import { getRandomHexColor } from './utils'
 
@@ -45,7 +45,7 @@ export const DEFAULT_ACCOUNT: IJiraIssueAccountSettings = {
     },
 }
 
-function deepCopy(obj: any): any {
+function deepCopy<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj))
 }
 

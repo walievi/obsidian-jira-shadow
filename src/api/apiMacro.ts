@@ -36,7 +36,7 @@ export async function getWorkLogBySprintId(projectKeyOrId: string, sprintId: num
     return await getWorkLogByDates(projectKeyOrId, sprint.startDate, sprint.endDate)
 }
 
-export async function getWorkLogByDates(projectKeyOrId: string, startDate: string, endDate: string = 'now()'): Promise<IJiraWorklog[]> {
+export async function getWorkLogByDates(projectKeyOrId: string, startDate: string, endDate = 'now()'): Promise<IJiraWorklog[]> {
     const searchResults = await API.base.getSearchResults(
         `project = "${projectKeyOrId}" AND worklogDate > ${dateTimeToDate(startDate)} AND worklogDate < ${dateTimeToDate(endDate)}`,
         { limit: 50, fields: ['worklog'] }
@@ -51,7 +51,7 @@ export async function getWorkLogByDates(projectKeyOrId: string, startDate: strin
     return worklogs
 }
 
-export async function getWorkLogSeriesByUser(projectKeyOrId: string, startDate: string, endDate: string = 'now()'): Promise<ISeries> {
+export async function getWorkLogSeriesByUser(projectKeyOrId: string, startDate: string, endDate = 'now()'): Promise<ISeries> {
     const worklogs = await API.macro.getWorkLogByDates(projectKeyOrId, startDate, endDate)
     const series: ISeries = {}
     for (const worklog of worklogs) {
@@ -64,7 +64,7 @@ export async function getWorkLogSeriesByUser(projectKeyOrId: string, startDate: 
     return series
 }
 
-export async function getVelocity(projectKeyOrId: string, sprintId: number, storyPointFieldName: string = 'aggregatetimeoriginalestimate') {
+export async function getVelocity(projectKeyOrId: string, sprintId: number, storyPointFieldName = 'aggregatetimeoriginalestimate') {
     const searchResults = await API.base.getSearchResults(
         `project = "${projectKeyOrId}" AND sprint = ${sprintId} AND resolution = Done`,
         { limit: 50, fields: [storyPointFieldName] }

@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
+import { Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { JiraIssueSettingTab } from './settings'
 import JiraClient from './client/jiraClient'
 import ObjectsCache from './objectsCache'

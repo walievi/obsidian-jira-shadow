@@ -4,7 +4,7 @@ import { getAccountByAlias } from "./utils"
 
 export class SearchView {
     type: ESearchResultsRenderingTypes = ESearchResultsRenderingTypes.TABLE
-    query: string = ''
+    query = ''
     limit: number = null
     columns: ISearchColumn[] = []
     fileColumns: ISearchColumn[] = []

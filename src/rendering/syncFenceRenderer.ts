@@ -1,5 +1,4 @@
 import { MarkdownPostProcessorContext, setIcon, Notice, TFile } from "obsidian"
-import ObjectsCache from "../objectsCache"
 import JiraClient from "../client/jiraClient"
 import RC from "./renderingCommon"
 import { getAccountByAlias } from "../utils"
@@ -33,7 +32,7 @@ export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx
 
     const container = createDiv({ cls: 'jira-shadow-sync-container' })
 
-    const info = createSpan({ text: `Last sync: ${lastSync || 'Never'}`, parent: container })
+    createSpan({ text: `Last sync: ${lastSync || 'Never'}`, parent: container })
 
     const syncBtn = createEl('button', { text: 'Sync Now', parent: container })
     setIcon(syncBtn, 'sync-small')

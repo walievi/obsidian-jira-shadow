@@ -71,7 +71,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('td', { text: issue.fields.description, parent: row })
                 }
                 break
-            case ESearchColumnsTypes.TYPE:
+            case ESearchColumnsTypes.TYPE: {
                 const typeCell = createEl('td', { parent: row })
                 if (issue.fields.issuetype.iconUrl) {
                     createEl('img', {
@@ -89,6 +89,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createSpan({ text: ' ' + issue.fields.issuetype.name, parent: typeCell })
                 }
                 break
+            }
             case ESearchColumnsTypes.CREATED:
                 if (column.compact) {
                     createEl('td', { text: '🕑', title: dateToStr(issue.fields.created), parent: row })
@@ -103,7 +104,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('td', { text: dateToStr(issue.fields.updated), parent: row })
                 }
                 break
-            case ESearchColumnsTypes.REPORTER:
+            case ESearchColumnsTypes.REPORTER: {
                 const reporterName = issue.fields.reporter.displayName || ''
                 if (column.compact && reporterName && issue.fields.reporter.avatarUrls[AVATAR_RESOLUTION]) {
                     createEl('img', {
@@ -116,7 +117,8 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('td', { text: reporterName, parent: row })
                 }
                 break
-            case ESearchColumnsTypes.ASSIGNEE:
+            }
+            case ESearchColumnsTypes.ASSIGNEE: {
                 const assigneeName = issue.fields.assignee.displayName || ''
                 if (column.compact && assigneeName && issue.fields.assignee.avatarUrls[AVATAR_RESOLUTION]) {
                     createEl('img', {
@@ -129,7 +131,8 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('td', { text: assigneeName, parent: row })
                 }
                 break
-            case ESearchColumnsTypes.PRIORITY:
+            }
+            case ESearchColumnsTypes.PRIORITY: {
                 const priorityCell = createEl('td', { parent: row })
                 if (issue.fields.priority && issue.fields.priority.name) {
                     if (issue.fields.priority.iconUrl) {
@@ -149,7 +152,8 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     priorityCell.setText('-')
                 }
                 break
-            case ESearchColumnsTypes.STATUS:
+            }
+            case ESearchColumnsTypes.STATUS: {
                 const statusColor = JIRA_STATUS_COLOR_MAP_BY_NAME[issue.fields.status.name] || 
                 JIRA_STATUS_COLOR_MAP[issue.fields.status.statusCategory.colorName] || 
                 'is-light'
@@ -159,6 +163,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createSpan({ cls: `ji-tag no-wrap ${statusColor}`, text: issue.fields.status.name, title: issue.fields.status.description, attr: { 'data-status': issue.fields.status.name }, parent: createEl('td', { parent: row }) })
                 }
                 break
+            }
             case ESearchColumnsTypes.DUE_DATE:
                 if (column.compact) {
                     createEl('td', { text: '🕑', title: dateToStr(issue.fields.duedate), parent: row })
@@ -201,7 +206,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
             case ESearchColumnsTypes.PROJECT:
                 createEl('td', { text: issue.fields.project.key, title: issue.fields.project.name, parent: row })
                 break
-            case ESearchColumnsTypes.FIX_VERSIONS:
+            case ESearchColumnsTypes.FIX_VERSIONS: {
                 const fixVersionsCell = createEl('td', { parent: row })
                 for (let i = 0; i < issue.fields.fixVersions.length; i++) {
                     const fixVersion = issue.fields.fixVersions[i]
@@ -215,6 +220,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     }
                 }
                 break
+            }
             case ESearchColumnsTypes.COMPONENTS:
                 createEl('td', { text: issue.fields.components.flatMap(c => c.name).join(', '), parent: row })
                 break
@@ -245,7 +251,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
             case ESearchColumnsTypes.CUSTOM_FIELD:
                 createEl('td', { text: renderCustomField(issue, column.extra), parent: row })
                 break
-            case ESearchColumnsTypes.NOTES:
+            case ESearchColumnsTypes.NOTES: {
                 if (!markdownNotes) {
                     markdownNotes = RC.getNotes()
                 }
@@ -264,6 +270,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('a', { text: '➕', title: 'Create new note', href: issue.key, cls: 'internal-link icon-link', parent: noteCell })
                 }
                 break
+            }
             case ESearchColumnsTypes.LAST_VIEWED:
                 if (column.compact) {
                     createEl('td', { text: '🕑', title: dateToStr(issue.fields.lastViewed), parent: row })
@@ -271,7 +278,7 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createEl('td', { text: dateToStr(issue.fields.lastViewed), parent: row })
                 }
                 break
-            case ESearchColumnsTypes.DEV_STATUS:
+            case ESearchColumnsTypes.DEV_STATUS: {
                 const cacheKey = 'dev-status-' + issue.id
                 let devStatus: IJiraDevStatus = null
                 const devStatusCacheItem = ObjectsCache.get(cacheKey)
@@ -303,6 +310,8 @@ export const renderTableColumn = async (columns: ISearchColumn[], issue: IJiraIs
                     createSpan({ parent: cell, title: 'No data available', text: '-' })
                 }
                 break
+            }
+            default:
         }
     }
 }

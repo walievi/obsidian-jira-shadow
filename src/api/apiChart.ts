@@ -37,7 +37,7 @@ ${series.map(s => {
 }
 
 
-export async function getWorklogPerDay(projectKeyOrId: string, startDate: string, endDate: string = 'now()') {
+export async function getWorklogPerDay(projectKeyOrId: string, startDate: string, endDate = 'now()') {
     const worklogs = await API.macro.getWorkLogByDates(projectKeyOrId, startDate, endDate)
     const labels = []
     const emptySeries: ISeries = {}
@@ -69,7 +69,7 @@ export async function getWorklogPerDay(projectKeyOrId: string, startDate: string
         }))
 }
 
-export async function getWorklogPerUser(projectKeyOrId: string, startDate: string, endDate: string = 'now()', options: { format?: EChartFormat, capacity?: ISeries } = {}) {
+export async function getWorklogPerUser(projectKeyOrId: string, startDate: string, endDate = 'now()', options: { format?: EChartFormat, capacity?: ISeries } = {}) {
     const opt = {
         format: options.format || EChartFormat.PERCENTAGE,
         capacity: options.capacity || null,
@@ -86,7 +86,7 @@ export async function getWorklogPerUser(projectKeyOrId: string, startDate: strin
                 series[a] = series[a] / MS_IN_A_DAY
             }
             break
-        case EChartFormat.PERCENTAGE:
+        case EChartFormat.PERCENTAGE: {
             const days = moment.duration(moment(endDate).diff(startDate)).asDays()
             for (const author in series) {
                 if (opt.capacity) {
@@ -100,6 +100,7 @@ export async function getWorklogPerUser(projectKeyOrId: string, startDate: strin
                 }
             }
             break
+        }
         default:
             throw new Error('Invalid chart format')
     }

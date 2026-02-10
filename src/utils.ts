@@ -1,6 +1,7 @@
 import { IJiraIssueAccountSettings } from "./interfaces/settingsInterfaces"
 import { SettingsData } from "./settings"
-const colorsys = require('colorsys')
+// @ts-ignore
+import * as colorsys from 'colorsys'
 
 export function getAccountByAlias(alias: string): IJiraIssueAccountSettings {
     if (alias) {

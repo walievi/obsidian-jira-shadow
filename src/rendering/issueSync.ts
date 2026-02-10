@@ -1,6 +1,6 @@
-import { TFile, Notice, normalizePath } from "obsidian"
+import { TFile, normalizePath } from "obsidian"
 import { IJiraIssue } from "../interfaces/issueInterfaces"
-import { ISearchColumn, ESearchColumnsTypes, SEARCH_COLUMNS_DESCRIPTION, IJiraIssueAccountSettings } from "../interfaces/settingsInterfaces"
+import { ISearchColumn, ESearchColumnsTypes, SEARCH_COLUMNS_DESCRIPTION } from "../interfaces/settingsInterfaces"
 import { ObsidianApp } from "../globals"
 import RC from "./renderingCommon"
 import { getIssueStringValue } from "./valueExtractor"
@@ -43,10 +43,11 @@ export async function syncIssueContent(
     // Helper to get friendly name
     const getFriendlyColumnName = (col: ISearchColumn) => {
         if (col.type === ESearchColumnsTypes.CUSTOM_FIELD) return col.extra;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (SEARCH_COLUMNS_DESCRIPTION as any)[col.type] || col.type;
     }
 
-    let columnsToRender = fileColumns
+    const columnsToRender = fileColumns
     
     // If updating existing file and no columns passed, try to read from frontmatter? 
     // Actually, user wants columns to be defined in search block. 
@@ -110,7 +111,7 @@ columns: ${columnsString}
         })
 
         // Update Content
-        let content = await vault.read(file)
+        const content = await vault.read(file)
         const startIdx = content.indexOf(JIRA_ISSUE_START_MARKER)
         const endIdx = content.indexOf(JIRA_ISSUE_END_MARKER)
 

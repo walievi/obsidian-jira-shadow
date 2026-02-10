@@ -1,6 +1,5 @@
 import { IJiraIssue } from "../interfaces/issueInterfaces"
-import { ESearchColumnsTypes, ISearchColumn, SEARCH_COLUMNS_DESCRIPTION } from "../interfaces/settingsInterfaces"
-import { JIRA_STATUS_COLOR_MAP } from "./renderingCommon"
+import { ESearchColumnsTypes, ISearchColumn } from "../interfaces/settingsInterfaces"
 
 function dateToStr(fullDate: string): string {
     if (fullDate) {
@@ -91,8 +90,10 @@ export function getIssueStringValue(column: ISearchColumn, issue: IJiraIssue): s
                 const val = issue.fields[column.extra]
                 if (typeof val === 'object') {
                     if (Array.isArray(val)) {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         return val.map((v: any) => v.value || v.name || v.toString()).join(', ')
                     }
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const v = val as any
                     return v.value || v.name || JSON.stringify(val)
                 }

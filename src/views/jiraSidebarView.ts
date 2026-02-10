@@ -5,7 +5,6 @@ import { ISavedQuery, ISearchColumn } from '../interfaces/settingsInterfaces'
 import { syncIssueContent } from '../rendering/issueSync'
 import { SearchView } from '../searchView'
 import JiraIssuePlugin from '../main'
-import { getAccountByAlias } from '../utils'
 
 export const JIRA_SIDEBAR_VIEW_TYPE = 'jira-shadow-sidebar-view'
 
@@ -22,7 +21,7 @@ export class JiraSidebarView extends ItemView {
     homeContainer: HTMLElement
     queryContainer: HTMLElement
     queryListContainer: HTMLElement
-    searchTerm: string = ''
+    searchTerm = ''
 
     constructor(leaf: WorkspaceLeaf, plugin: JiraIssuePlugin) {
         super(leaf)
@@ -62,7 +61,7 @@ export class JiraSidebarView extends ItemView {
 
         header.createEl('h3', { text: 'Saved filters' })
         
-        const newBtn = new ButtonComponent(header)
+        new ButtonComponent(header)
             .setButtonText('New filter')
             .setCta()
             .onClick(() => this.openQuery(null))
@@ -70,7 +69,7 @@ export class JiraSidebarView extends ItemView {
         // Search Input
         const searchContainer = this.homeContainer.createDiv({ cls: 'jira-search-container' })
         
-        const searchInput = new TextComponent(searchContainer)
+        new TextComponent(searchContainer)
             .setPlaceholder('Search filters...')
             .setValue(this.searchTerm)
             .onChange((value) => {
@@ -105,7 +104,7 @@ export class JiraSidebarView extends ItemView {
             const actions = item.createDiv({ cls: 'jira-query-actions' })
 
             // Clone Button
-            const cloneBtn = new ButtonComponent(actions)
+            new ButtonComponent(actions)
                 .setIcon('copy')
                 .setTooltip('Clone')
                 .onClick((e) => {
@@ -114,7 +113,7 @@ export class JiraSidebarView extends ItemView {
                 })
 
             // Delete Button
-            const deleteBtn = new ButtonComponent(actions)
+            new ButtonComponent(actions)
                 .setIcon('trash')
                 .setTooltip('Delete')
                 .setClass('jira-delete-btn') // Optional for custom styling
@@ -196,7 +195,7 @@ export class JiraSidebarView extends ItemView {
         // Back button
         const header = this.queryContainer.createDiv({ cls: 'jira-query-header' })
         
-        const backBtn = new ButtonComponent(header)
+        new ButtonComponent(header)
             .setIcon('arrow-left')
             .setTooltip('Back to list')
             .onClick(() => this.showHome())
@@ -421,7 +420,7 @@ export class JiraSidebarView extends ItemView {
 
             const tbody = table.createEl('tbody')
 
-            let fileColumnsStr = this.fileColumnsInput.getValue()
+            const fileColumnsStr = this.fileColumnsInput.getValue()
             let fileColumns: ISearchColumn[] | null = null
             if (fileColumnsStr) {
                 try {
@@ -459,7 +458,7 @@ export class JiraSidebarView extends ItemView {
                 syncBtn.onclick = async () => {
                     syncBtn.disabled = true
                     try {
-                        let fullPath = destination ? `${destination}/${issue.key}.md` : `${issue.key}.md`
+                        const fullPath = destination ? `${destination}/${issue.key}.md` : `${issue.key}.md`
                         await syncIssueContent(issue, fullPath, fileColumns)
                         new Notice(`Synced ${issue.key}`)
                     } catch (e) {
