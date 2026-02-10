@@ -1,7 +1,7 @@
 {
     "name": "jira-shadow",
     "version": "1.0.0",
-    "description": "A specialized fork of obsidian-jira-issue for syncing issues to local files.",
+    "description": "A fork of jira-issue plugin focused on syncing Jira queries to local files via a dedicated sidebar view.",
     "main": "main.js",
     "scripts": {
         "dev": "node esbuild.config.mjs",
