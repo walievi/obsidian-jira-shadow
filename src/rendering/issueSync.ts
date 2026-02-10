@@ -81,7 +81,7 @@ export async function syncIssueContent(
 
     // Generate Body Content
     let bodyContent = `${JIRA_ISSUE_START_MARKER}
-\`\`\`jira-issue-sync
+\`\`\`jira-shadow-sync
 key: ${issue.key}
 account: ${issue.account.alias}
 last_sync: ${now}

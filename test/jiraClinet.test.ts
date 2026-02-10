@@ -47,7 +47,7 @@ describe('JiraClient', () => {
                     contentType: 'application/json',
                     headers: {
                         "Accept": "application/json",
-                        "User-Agent": "obsidian-jira-issue-plugin",
+                        "User-Agent": "obsidian-jira-shadow-plugin",
                         "X-Atlassian-Token": "no-check",
                     },
                     method: 'GET',

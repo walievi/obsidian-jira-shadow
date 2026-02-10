@@ -314,7 +314,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                         newAccount.password = value
                     }).inputEl.setAttr('type', this._showPassword ? 'text' : 'password'))
                 .addExtraButton(button => button
-                    .setIcon(this._showPassword ? 'jira-issue-hidden' : 'jira-issue-visible')
+                    .setIcon(this._showPassword ? 'jira-shadow-hidden' : 'jira-shadow-visible')
                     .setTooltip(this._showPassword ? 'Hide password' : 'Show password')
                     .onClick(async () => {
                         this._showPassword = !this._showPassword
@@ -340,7 +340,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                         newAccount.bareToken = value
                     }).inputEl.setAttr('type', this._showPassword ? 'text' : 'password'))
                 .addExtraButton(button => button
-                    .setIcon(this._showPassword ? 'jira-issue-hidden' : 'jira-issue-visible')
+                    .setIcon(this._showPassword ? 'jira-shadow-hidden' : 'jira-shadow-visible')
                     .setTooltip(this._showPassword ? 'Hide password' : 'Show password')
                     .onClick(async () => {
                         this._showPassword = !this._showPassword
