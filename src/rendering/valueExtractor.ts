@@ -91,9 +91,10 @@ export function getIssueStringValue(column: ISearchColumn, issue: IJiraIssue): s
                 const val = issue.fields[column.extra]
                 if (typeof val === 'object') {
                     if (Array.isArray(val)) {
-                        return val.map(v => v.value || v.name || v.toString()).join(', ')
+                        return val.map((v: any) => v.value || v.name || v.toString()).join(', ')
                     }
-                    return val.value || val.name || JSON.stringify(val)
+                    const v = val as any
+                    return v.value || v.name || JSON.stringify(val)
                 }
                 return String(val)
             }

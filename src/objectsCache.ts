@@ -1,7 +1,10 @@
 import { SettingsData } from "./settings"
 
-const ms = require('ms')
-const moment = require('moment')
+import { moment as moment_ } from "obsidian"
+// @ts-ignore
+import momentjs from "moment"
+const moment = moment_ as unknown as typeof momentjs
+import ms from "ms"
 
 interface CacheItem {
     updateTime: number,

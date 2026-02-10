@@ -73,7 +73,7 @@ export interface IJiraIssue {
         worklog: {
             worklogs: IJiraWorklog[]
         }
-        [k: string]: any
+        [k: string]: unknown
     }
     account: IJiraIssueAccountSettings
 }

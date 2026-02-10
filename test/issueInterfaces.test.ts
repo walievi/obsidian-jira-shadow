@@ -40,7 +40,7 @@ describe('IssueInterfaces', () => {
         expect(issue.fields.assignee.active).toEqual(false)
         expect(issue.fields.assignee.displayName).toEqual('')
         expect(issue.fields.customfield_10000).toEqual(kVal1)
-        expect(issue.fields.customfield_10001.key).toEqual(kVal1)
+        expect((issue.fields.customfield_10001 as any).key).toEqual(kVal1)
     })
 
     test('toDefaultedIssue invalid', () => {

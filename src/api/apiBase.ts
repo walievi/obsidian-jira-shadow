@@ -3,20 +3,20 @@ import { IJiraIssueAccountSettings } from "../interfaces/settingsInterfaces"
 import ObjectsCache from "../objectsCache"
 import JiraClient from "../client/jiraClient"
 
-type InferArgs<T> = T extends (...t: [...infer Arg]) => any ? Arg : never
+type InferArgs<T> = T extends (...t: [...infer Arg]) => unknown ? Arg : never
 type InferReturn<T> = T extends (...t: [...infer Arg]) => infer Res ? Res : never
 
-function cacheWrapper<TFunc extends (...args: any[]) => any>(func: TFunc)
+function cacheWrapper<TFunc extends (...args: unknown[]) => unknown>(func: TFunc)
     : (...args: InferArgs<TFunc>) => InferReturn<TFunc> {
     return (...args: InferArgs<TFunc>) => {
         const cacheKey = `api-${func.name}-${JSON.stringify(args)}`
         const cacheVal = ObjectsCache.get(cacheKey)
         if (cacheVal) {
-            return cacheVal.data
+            return cacheVal.data as InferReturn<TFunc>
         }
-        const returnValue = func(...args)
+        const returnValue = func(...args as any[])
         ObjectsCache.add(cacheKey, returnValue)
-        return returnValue
+        return returnValue as InferReturn<TFunc>
     }
 }
 

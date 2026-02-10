@@ -1,7 +1,8 @@
 import { ESprintState, IJiraSprint, IJiraWorklog, ISeries } from "../interfaces/issueInterfaces"
 import API from "./api"
-import moment from "moment"
-const ms = require('ms')
+import { moment as moment_ } from "obsidian"
+const moment = moment_ as any
+import ms from "ms"
 
 function dateTimeToDate(dateTime: string): string {
     if (dateTime.match(/^\d/)) {
@@ -70,7 +71,9 @@ export async function getVelocity(projectKeyOrId: string, sprintId: number, stor
     )
     let velocity = 0
     for (const issue of searchResults.issues) {
-        velocity += issue.fields[storyPointFieldName]
+        if (issue.fields[storyPointFieldName]) {
+            velocity += (issue.fields[storyPointFieldName] as number) || 0
+        }
     }
     return velocity
 }

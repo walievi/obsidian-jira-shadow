@@ -1,4 +1,4 @@
-import { MarkdownPostProcessorContext, setIcon, Notice } from "obsidian"
+import { MarkdownPostProcessorContext, setIcon, Notice, TFile } from "obsidian"
 import ObjectsCache from "../objectsCache"
 import JiraClient from "../client/jiraClient"
 import RC from "./renderingCommon"
@@ -32,22 +32,11 @@ export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx
     }
 
     const container = createDiv({ cls: 'jira-shadow-sync-container' })
-    container.style.display = 'flex'
-    container.style.alignItems = 'center'
-    container.style.gap = '10px'
-    container.style.marginBottom = '10px'
-    container.style.padding = '5px'
-    container.style.border = '1px solid var(--background-modifier-border)'
-    container.style.borderRadius = '4px'
 
     const info = createSpan({ text: `Last sync: ${lastSync || 'Never'}`, parent: container })
-    info.style.fontSize = '0.8em'
-    info.style.color = 'var(--text-muted)'
-    info.style.flexGrow = '1'
 
     const syncBtn = createEl('button', { text: 'Sync Now', parent: container })
     setIcon(syncBtn, 'sync-small')
-    syncBtn.style.cursor = 'pointer'
 
     syncBtn.onclick = async () => {
         syncBtn.disabled = true
@@ -69,8 +58,8 @@ export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx
                 }
             }
 
-            if (file) {
-                 await syncIssueContent(issue, file as any, fileColumns) 
+            if (file instanceof TFile) {
+                 await syncIssueContent(issue, file, fileColumns) 
                  new Notice(`Jira Shadow: ${key} synced successfully`)
             } else {
                  new Notice(`Jira Shadow: Could not find current file`)

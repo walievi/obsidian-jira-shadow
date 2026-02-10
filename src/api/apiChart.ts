@@ -1,7 +1,10 @@
-import moment from "moment"
+import { moment as moment_ } from "obsidian"
+// @ts-ignore
+import momentjs from "moment"
+const moment = moment_ as unknown as typeof momentjs
 import { IMultiSeries, ISeries } from "../interfaces/issueInterfaces"
 import API from "./api"
-const ms = require('ms')
+import ms from "ms"
 
 const CHART_WIDTH = '800px'
 

@@ -101,17 +101,17 @@ export class JiraIssueSettingTab extends PluginSettingTab {
         // Account cache settings cleanup
         settingsToStore.accounts.forEach(account => account.cache = DEFAULT_ACCOUNT.cache)
         // Delete old properties
-        delete (settingsToStore as any)['darkMode']
-        delete (settingsToStore as any)['host']
-        delete (settingsToStore as any)['authenticationType']
-        delete (settingsToStore as any)['username']
-        delete (settingsToStore as any)['password']
-        delete (settingsToStore as any)['customFieldsNames']
-        delete (settingsToStore as any)['inlineIssueUrlToTag']
-        delete (settingsToStore as any)['inlineIssuePrefix']
-        delete (settingsToStore as any)['searchColumns']
-        delete (settingsToStore as any)['showColorBand']
-        delete (settingsToStore as any)['showJiraLink']
+        Reflect.deleteProperty(settingsToStore, 'darkMode')
+        Reflect.deleteProperty(settingsToStore, 'host')
+        Reflect.deleteProperty(settingsToStore, 'authenticationType')
+        Reflect.deleteProperty(settingsToStore, 'username')
+        Reflect.deleteProperty(settingsToStore, 'password')
+        Reflect.deleteProperty(settingsToStore, 'customFieldsNames')
+        Reflect.deleteProperty(settingsToStore, 'inlineIssueUrlToTag')
+        Reflect.deleteProperty(settingsToStore, 'inlineIssuePrefix')
+        Reflect.deleteProperty(settingsToStore, 'searchColumns')
+        Reflect.deleteProperty(settingsToStore, 'showColorBand')
+        Reflect.deleteProperty(settingsToStore, 'showJiraLink')
 
         await this._plugin.saveData(settingsToStore)
 
@@ -136,7 +136,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
 
     displayHeader() {
         const { containerEl } = this
-        containerEl.createEl('h2', { text: 'Jira Shadow' })
+        new Setting(containerEl).setHeading().setName('Jira Shadow')
         const description = containerEl.createEl('p')
         description.appendText('Need help? Explore the ')
         description.appendChild(createEl('a', {
@@ -149,7 +149,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
 
     displayFooter() {
         const { containerEl } = this
-        containerEl.createEl('h3', { text: 'Support development' })
+        new Setting(containerEl).setHeading().setName('Support development')
 
         const supportDiv = containerEl.createEl('div')
         supportDiv.setAttr('style', 'text-align: center; background-color: var(--background-secondary); padding: 15px; border-radius: 10px;')
@@ -193,7 +193,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
 
     displayAccountsSettings() {
         const { containerEl } = this
-        containerEl.createEl('h3', { text: 'Accounts' })
+        new Setting(containerEl).setHeading().setName('Accounts')
 
         for (const account of SettingsData.accounts) {
             const accountSetting = new Setting(containerEl)
@@ -236,7 +236,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
         if (!newAccount) newAccount = Object.assign({}, prevAccount)
         const { containerEl } = this
         containerEl.empty()
-        containerEl.createEl('h3', { text: 'Modify account' })
+        new Setting(containerEl).setHeading().setName('Modify account')
 
         new Setting(containerEl)
             .setName('Alias')
@@ -438,7 +438,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
 
     displayRenderingSettings() {
         const { containerEl } = this
-        containerEl.createEl('h3', { text: 'Rendering' })
+        new Setting(containerEl).setHeading().setName('Rendering')
 
         new Setting(containerEl)
             .setName('Default search results limit')
@@ -464,7 +464,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
 
     displayExtraSettings() {
         const { containerEl } = this
-        containerEl.createEl('h3', { text: 'Cache' })
+        new Setting(containerEl).setHeading().setName('Cache')
 
         new Setting(containerEl)
             .setName('Cache time')
@@ -477,7 +477,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                     await this.saveSettings()
                 }))
 
-        containerEl.createEl('h3', { text: 'Troubleshooting' })
+        new Setting(containerEl).setHeading().setName('Troubleshooting')
         new Setting(containerEl)
             .setName('Log data request and responses')
             .setDesc('Log in the console (CTRL+Shift+I) all the API requests and responses performed by the plugin.')

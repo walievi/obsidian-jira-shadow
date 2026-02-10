@@ -59,23 +59,16 @@ export class JiraSidebarView extends ItemView {
         this.homeContainer.empty()
         
         const header = this.homeContainer.createDiv({ cls: 'jira-home-header' })
-        header.style.display = 'flex'
-        header.style.justifyContent = 'space-between'
-        header.style.alignItems = 'center'
-        header.style.marginBottom = '15px'
-        header.style.padding = '10px 0'
-        header.style.borderBottom = '1px solid var(--background-modifier-border)'
 
-        header.createEl('h3', { text: 'Saved Filters', attr: { style: 'margin: 0' } })
+        header.createEl('h3', { text: 'Saved filters' })
         
         const newBtn = new ButtonComponent(header)
-            .setButtonText('New Filter')
+            .setButtonText('New filter')
             .setCta()
             .onClick(() => this.openQuery(null))
 
         // Search Input
         const searchContainer = this.homeContainer.createDiv({ cls: 'jira-search-container' })
-        searchContainer.style.marginBottom = '15px'
         
         const searchInput = new TextComponent(searchContainer)
             .setPlaceholder('Search filters...')
@@ -84,7 +77,6 @@ export class JiraSidebarView extends ItemView {
                 this.searchTerm = value
                 this.renderQueryList()
             })
-        searchInput.inputEl.style.width = '100%'
 
         this.queryListContainer = this.homeContainer.createDiv({ cls: 'jira-queries-list' })
         this.renderQueryList()
@@ -100,27 +92,17 @@ export class JiraSidebarView extends ItemView {
         if (filteredQueries.length === 0) {
             this.queryListContainer.createDiv({ 
                 text: this.searchTerm ? 'No matching filters found.' : 'No saved filters yet.', 
-                attr: { style: 'color: var(--text-muted); font-style: italic;' } 
+                cls: 'jira-empty-message'
             })
             return
         }
 
         filteredQueries.forEach(q => {
             const item = this.queryListContainer.createDiv({ cls: 'jira-query-item' })
-            item.style.padding = '10px'
-            item.style.marginBottom = '8px'
-            item.style.backgroundColor = 'var(--background-secondary)'
-            item.style.borderRadius = '4px'
-            item.style.cursor = 'pointer'
-            item.style.display = 'flex'
-            item.style.justifyContent = 'space-between'
-            item.style.alignItems = 'center'
 
-            item.createSpan({ text: q.name, attr: { style: 'font-weight: bold' } })
+            item.createSpan({ text: q.name, cls: 'query-name' })
             
-            const actions = item.createDiv()
-            actions.style.display = 'flex'
-            actions.style.gap = '5px'
+            const actions = item.createDiv({ cls: 'jira-query-actions' })
 
             // Clone Button
             const cloneBtn = new ButtonComponent(actions)
@@ -213,16 +195,13 @@ export class JiraSidebarView extends ItemView {
         
         // Back button
         const header = this.queryContainer.createDiv({ cls: 'jira-query-header' })
-        header.style.display = 'flex'
-        header.style.alignItems = 'center'
-        header.style.marginBottom = '15px'
         
         const backBtn = new ButtonComponent(header)
             .setIcon('arrow-left')
             .setTooltip('Back to list')
             .onClick(() => this.showHome())
         
-        header.createSpan({ text: 'Filter Details', attr: { style: 'margin-left: 10px; font-weight: bold;' } })
+        header.createSpan({ text: 'Filter details' })
 
         // --- Form Section ---
         const formContainer = this.queryContainer.createDiv({ cls: 'jira-query-form' })
@@ -231,16 +210,15 @@ export class JiraSidebarView extends ItemView {
             .setName('Name')
             .addText(text => {
                 this.nameInput = text
-                text.setPlaceholder('Query Name')
+                text.setPlaceholder('Query name')
             })
 
         new Setting(formContainer)
-            .setName('JQL Query')
+            .setName('JQL query')
             .addTextArea(text => {
                 this.queryInput = text
                 text.setPlaceholder('project = MYPROJ AND status = Open')
                 text.inputEl.rows = 3
-                text.inputEl.style.width = '100%'
             })
 
         new Setting(formContainer)
@@ -261,20 +239,16 @@ export class JiraSidebarView extends ItemView {
             })
 
         new Setting(formContainer)
-            .setName('File Columns')
+            .setName('File columns')
             .setDesc('Columns to sync into file body')
             .addTextArea(text => {
                 this.fileColumnsInput = text
                 text.setPlaceholder('description, assignee, created')
                 text.inputEl.rows = 2
-                text.inputEl.style.width = '100%'
             })
 
         // --- Action Buttons ---
         const actionsContainer = this.queryContainer.createDiv({ cls: 'jira-form-actions' })
-        actionsContainer.style.display = 'flex'
-        actionsContainer.style.gap = '10px'
-        actionsContainer.style.marginBottom = '20px'
 
         new ButtonComponent(actionsContainer)
             .setButtonText('Save')

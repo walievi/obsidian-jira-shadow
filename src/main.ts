@@ -56,7 +56,7 @@ export default class JiraIssuePlugin extends Plugin {
         
         this.addCommand({
             id: 'open-jira-sidebar',
-            name: 'Open Jira Shadow Sidebar',
+            name: 'Open Sidebar',
             callback: () => {
                 this.activateView()
             }
