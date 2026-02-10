@@ -6,15 +6,14 @@ import { SyncFenceRenderer } from './rendering/syncFenceRenderer'
 import { setupIcons } from './icons/icons'
 import API from './api/api'
 import { JiraSidebarView, JIRA_SIDEBAR_VIEW_TYPE } from './views/jiraSidebarView'
-
-export let ObsidianApp: App = null
+import { setObsidianApp } from './globals'
 
 export default class JiraIssuePlugin extends Plugin {
     private _settingTab: JiraIssueSettingTab
     public api = API
 
     async onload() {
-        ObsidianApp = this.app
+        setObsidianApp(this.app)
         this.registerAPI()
         this._settingTab = new JiraIssueSettingTab(this.app, this)
         await this._settingTab.loadSettings()
@@ -30,12 +29,13 @@ export default class JiraIssuePlugin extends Plugin {
         )
 
         // Add Ribbon Icon
-        this.addRibbonIcon('search', 'Jira Sync', () => {
+        this.addRibbonIcon('search', 'Jira Shadow', () => {
             this.activateView()
         })
 
         // Fence rendering - Only keep Sync
         this.registerMarkdownCodeBlockProcessor('jira-issue-sync', SyncFenceRenderer)
+        this.registerMarkdownCodeBlockProcessor('jira-shadow-sync', SyncFenceRenderer)
 
         // Settings refresh
         this._settingTab.onChange(() => {
@@ -50,13 +50,13 @@ export default class JiraIssuePlugin extends Plugin {
             callback: () => {
                 ObjectsCache.clear()
                 JiraClient.updateCustomFieldsCache()
-                new Notice('JiraIssue: Cache cleaned')
+                new Notice('Jira Shadow: Cache cleaned')
             }
         })
         
         this.addCommand({
             id: 'open-jira-sidebar',
-            name: 'Open Jira Sidebar',
+            name: 'Open Jira Shadow Sidebar',
             callback: () => {
                 this.activateView()
             }

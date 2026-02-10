@@ -4,7 +4,7 @@ import JiraClient from "../client/jiraClient"
 import RC from "./renderingCommon"
 import { getAccountByAlias } from "../utils"
 import { syncIssueContent } from "./issueSync"
-import { ObsidianApp } from "../main"
+import { ObsidianApp } from "../globals"
 import { SearchView } from "../searchView"
 import { ISearchColumn } from "../interfaces/settingsInterfaces"
 
@@ -31,7 +31,7 @@ export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx
         return
     }
 
-    const container = createDiv({ cls: 'jira-sync-container' })
+    const container = createDiv({ cls: 'jira-shadow-sync-container' })
     container.style.display = 'flex'
     container.style.alignItems = 'center'
     container.style.gap = '10px'
@@ -71,13 +71,13 @@ export const SyncFenceRenderer = async (source: string, rootEl: HTMLElement, ctx
 
             if (file) {
                  await syncIssueContent(issue, file as any, fileColumns) 
-                 new Notice(`Jira Issue: ${key} synced successfully`)
+                 new Notice(`Jira Shadow: ${key} synced successfully`)
             } else {
-                 new Notice(`Jira Issue: Could not find current file`)
+                 new Notice(`Jira Shadow: Could not find current file`)
             }
 
         } catch (e) {
-            new Notice(`Jira Issue: Sync failed - ${e.message}`)
+            new Notice(`Jira Shadow: Sync failed - ${e.message}`)
             console.error(e)
         } finally {
             syncBtn.disabled = false

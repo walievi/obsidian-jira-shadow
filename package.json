@@ -1,7 +1,7 @@
 {
-    "name": "obsidian-jira-issue",
+    "name": "jira-shadow",
     "version": "1.58.1",
-    "description": "This plugin allows you to track the progress of [Atlassian Jira](https://www.atlassian.com/software/jira) issues from your [Obsidian](https://obsidian.md/) notes.",
+    "description": "A specialized fork of obsidian-jira-issue for syncing issues to local files.",
     "main": "src/main.js",
     "scripts": {
         "dev": "node esbuild.config.mjs",

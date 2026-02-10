@@ -73,7 +73,7 @@ function buildUrl(host: string, requestOptions: RequestOptions, use2025Api: bool
 
 function buildHeaders(account: IJiraIssueAccountSettings): Record<string, string> {
     const requestHeaders: Record<string, string> = {
-        'User-Agent': 'obsidian-jira-issue-plugin',
+        'User-Agent': 'obsidian-jira-shadow-plugin',
         'X-Atlassian-Token': 'no-check',
         'Accept': 'application/json',
     }
@@ -128,7 +128,7 @@ async function sendRequest(requestOptions: RequestOptions): Promise<any> {
             case 404:
                 throw new Error(`Not Found: Issue does not exist`)
             case 410:
-                throw new Error(`Missing API: Activate the 2025 search api in the Jira Issue account settings`)
+                throw new Error(`Missing API: Activate the 2025 search api in the Jira Shadow account settings`)
             default:
                 if (isJsonResponse(response) && response.json.message) {
                     errorMsg = response.json.message
@@ -154,9 +154,9 @@ async function sendRequestWithAccount(account: IJiraIssueAccountSettings, reques
     }
     try {
         response = await requestUrl(requestUrlParam)
-        SettingsData.logRequestsResponses && console.info('JiraIssue:Fetch:', { request: requestUrlParam, response })
+        SettingsData.logRequestsResponses && console.info('JiraShadow:Fetch:', { request: requestUrlParam, response })
     } catch (errorResponse) {
-        SettingsData.logRequestsResponses && console.warn('JiraIssue:Fetch:', { request: requestUrlParam, response: errorResponse })
+        SettingsData.logRequestsResponses && console.warn('JiraShadow:Fetch:', { request: requestUrlParam, response: errorResponse })
         response = errorResponse
     }
     return response
@@ -176,9 +176,9 @@ async function preFetchImage(account: IJiraIssueAccountSettings, url: string): P
     let response: RequestUrlResponse
     try {
         response = await requestUrl(options)
-        SettingsData.logImagesFetch && console.info('JiraIssue:FetchImage:', { request: options, response })
+        SettingsData.logImagesFetch && console.info('JiraShadow:FetchImage:', { request: options, response })
     } catch (errorResponse) {
-        SettingsData.logImagesFetch && console.warn('JiraIssue:FetchImage:', { request: options, response: errorResponse })
+        SettingsData.logImagesFetch && console.warn('JiraShadow:FetchImage:', { request: options, response: errorResponse })
         response = errorResponse
     }
 

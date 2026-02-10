@@ -7,7 +7,7 @@ import { SearchView } from '../searchView'
 import JiraIssuePlugin from '../main'
 import { getAccountByAlias } from '../utils'
 
-export const JIRA_SIDEBAR_VIEW_TYPE = 'jira-issue-sidebar-view'
+export const JIRA_SIDEBAR_VIEW_TYPE = 'jira-shadow-sidebar-view'
 
 export class JiraSidebarView extends ItemView {
     plugin: JiraIssuePlugin
@@ -34,7 +34,7 @@ export class JiraSidebarView extends ItemView {
     }
 
     getDisplayText(): string {
-        return 'Jira Sync'
+        return 'Jira Shadow'
     }
 
     getIcon(): string {

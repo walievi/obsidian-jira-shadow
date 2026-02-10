@@ -39,13 +39,8 @@ export interface IJiraIssueSettings {
         columns: string[]
     }
     colorSchema: EColorSchema
-    inlineIssueUrlToTag: boolean
-    inlineIssuePrefix: string
-    searchColumns: ISearchColumn[]
     logRequestsResponses: boolean
     logImagesFetch: boolean
-    showColorBand: boolean
-    showJiraLink: boolean
     savedQueries: ISavedQuery[]
 
     // Legacy credentials

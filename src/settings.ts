@@ -1,7 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting, TextComponent } from 'obsidian'
 import JiraClient from './client/jiraClient'
 import { COLOR_SCHEMA_DESCRIPTION, EAuthenticationTypes, EColorSchema, ESearchColumnsTypes, IJiraIssueAccountSettings, IJiraIssueSettings, SEARCH_COLUMNS_DESCRIPTION } from './interfaces/settingsInterfaces'
-import JiraIssuePlugin from './main'
+import type JiraIssuePlugin from './main'
 import { getRandomHexColor } from './utils'
 
 const AUTHENTICATION_TYPE_DESCRIPTION = {
@@ -20,21 +20,6 @@ export const DEFAULT_SETTINGS: IJiraIssueSettings = {
         columns: [],
     },
     colorSchema: EColorSchema.FOLLOW_OBSIDIAN,
-    inlineIssueUrlToTag: true,
-    inlineIssuePrefix: 'JIRA:',
-    showColorBand: true,
-    showJiraLink: true,
-    searchColumns: [
-        { type: ESearchColumnsTypes.KEY, compact: false },
-        { type: ESearchColumnsTypes.SUMMARY, compact: false },
-        { type: ESearchColumnsTypes.TYPE, compact: true },
-        { type: ESearchColumnsTypes.CREATED, compact: false },
-        { type: ESearchColumnsTypes.UPDATED, compact: false },
-        { type: ESearchColumnsTypes.REPORTER, compact: false },
-        { type: ESearchColumnsTypes.ASSIGNEE, compact: false },
-        { type: ESearchColumnsTypes.PRIORITY, compact: true },
-        { type: ESearchColumnsTypes.STATUS, compact: false },
-    ],
     logRequestsResponses: false,
     logImagesFetch: false,
     savedQueries: [],
@@ -67,7 +52,6 @@ function deepCopy(obj: any): any {
 export class JiraIssueSettingTab extends PluginSettingTab {
     private _plugin: JiraIssuePlugin
     private _onChangeListener: (() => void) | null = null
-    private _searchColumnsDetails: HTMLDetailsElement = null
     private _showPassword = false
 
     constructor(app: App, plugin: JiraIssuePlugin) {
@@ -123,6 +107,11 @@ export class JiraIssueSettingTab extends PluginSettingTab {
         delete (settingsToStore as any)['username']
         delete (settingsToStore as any)['password']
         delete (settingsToStore as any)['customFieldsNames']
+        delete (settingsToStore as any)['inlineIssueUrlToTag']
+        delete (settingsToStore as any)['inlineIssuePrefix']
+        delete (settingsToStore as any)['searchColumns']
+        delete (settingsToStore as any)['showColorBand']
+        delete (settingsToStore as any)['showJiraLink']
 
         await this._plugin.saveData(settingsToStore)
 
@@ -136,27 +125,22 @@ export class JiraIssueSettingTab extends PluginSettingTab {
     }
 
     display(): void {
-        // Backup the search columns details status before cleaning the page
-        const isSearchColumnsDetailsOpen = this._searchColumnsDetails
-            && this._searchColumnsDetails.getAttribute('open') !== null
-
         // Clean the page
         this.containerEl.empty()
         this.displayHeader()
         this.displayAccountsSettings()
         this.displayRenderingSettings()
-        this.displaySearchColumnsSettings(isSearchColumnsDetailsOpen)
         this.displayExtraSettings()
         this.displayFooter()
     }
 
     displayHeader() {
         const { containerEl } = this
-        containerEl.createEl('h2', { text: 'Jira Issue' })
+        containerEl.createEl('h2', { text: 'Jira Shadow' })
         const description = containerEl.createEl('p')
         description.appendText('Need help? Explore the ')
         description.appendChild(createEl('a', {
-            text: 'Jira Issue documentation',
+            text: 'Jira Shadow documentation',
             href: 'https://marc0l92.github.io/obsidian-jira-issue/',
         }))
         description.appendText('.')
@@ -166,23 +150,43 @@ export class JiraIssueSettingTab extends PluginSettingTab {
     displayFooter() {
         const { containerEl } = this
         containerEl.createEl('h3', { text: 'Support development' })
-        const description = containerEl.createEl('p')
-        description.appendText('If you enjoy JiraIssue, consider giving me your feedback on the ')
-        description.appendChild(createEl('a', {
-            text: 'github repository',
-            href: 'https://github.com/marc0l92/obsidian-jira-issue/issues',
-        }))
-        description.appendText(', and maybe ')
-        description.appendChild(createEl('a', {
-            text: 'buying me a coffee',
-            href: 'https://ko-fi.com/marc0l92',
-        }))
-        description.appendText(' ☕.')
-        const buyMeACoffee = containerEl.createEl('a', { href: 'https://ko-fi.com/marc0l92' })
-        buyMeACoffee.appendChild(createEl('img', {
+
+        const supportDiv = containerEl.createEl('div')
+        supportDiv.setAttr('style', 'text-align: center; background-color: var(--background-secondary); padding: 15px; border-radius: 10px;')
+        
+        // Current Maintainer
+        supportDiv.createEl('p', { text: 'Project by William Steffen Alievi' }).setAttr('style', 'font-weight: bold; margin-bottom: 5px;')
+        const williamLinks = supportDiv.createEl('div')
+        williamLinks.setAttr('style', 'margin-bottom: 10px; font-size: 0.9em;')
+        williamLinks.appendChild(createEl('a', { text: '@walievi', href: 'https://github.com/walievi' }))
+        williamLinks.appendText(' | ')
+        williamLinks.appendChild(createEl('a', { text: 'Repository', href: 'https://github.com/walievi/obsidian-jira-shadow' }))
+        
+        const walieviLink = supportDiv.createEl('a', { href: 'https://ko-fi.com/walievi' })
+        walieviLink.appendChild(createEl('img', {
             attr: {
                 src: 'https://ko-fi.com/img/githubbutton_sm.svg',
-                height: '30',
+                height: '36',
+                alt: 'Buy William a Coffee'
+            }
+        }))
+
+        supportDiv.createEl('hr').setAttr('style', 'margin: 15px 0; border: none; border-top: 1px solid var(--background-modifier-border);')
+
+        // Original Creator
+        supportDiv.createEl('p', { text: 'Base Project Creator: Marco Lucarella' }).setAttr('style', 'font-weight: bold; margin-bottom: 5px;')
+        const marcoLinks = supportDiv.createEl('div')
+        marcoLinks.setAttr('style', 'margin-bottom: 10px; font-size: 0.9em;')
+        marcoLinks.appendChild(createEl('a', { text: '@marc0l92', href: 'https://github.com/marc0l92' }))
+        marcoLinks.appendText(' | ')
+        marcoLinks.appendChild(createEl('a', { text: 'Original Repository', href: 'https://github.com/marc0l92/obsidian-jira-issue' }))
+
+        const marcoLink = supportDiv.createEl('a', { href: 'https://ko-fi.com/marc0l92' })
+        marcoLink.appendChild(createEl('img', {
+            attr: {
+                src: 'https://ko-fi.com/img/githubbutton_sm.svg',
+                height: '36',
+                alt: 'Buy Marco a Coffee'
             }
         }))
     }
@@ -284,7 +288,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                         newAccount.password = value
                     }).inputEl.setAttr('type', this._showPassword ? 'text' : 'password'))
                 .addExtraButton(button => button
-                    .setIcon(this._showPassword ? 'jira-issue-hidden' : 'jira-issue-visible')
+                    .setIcon(this._showPassword ? 'jira-shadow-hidden' : 'jira-shadow-visible')
                     .setTooltip(this._showPassword ? 'Hide password' : 'Show password')
                     .onClick(async () => {
                         this._showPassword = !this._showPassword
@@ -403,17 +407,17 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                     button.setButtonText("Testing...")
                     try {
                         await JiraClient.testConnection(newAccount)
-                        new Notice('JiraIssue: Connection established!')
+                        new Notice('Jira Shadow: Connection established!')
                         try {
                             const loggedUser = await JiraClient.getLoggedUser(newAccount)
-                            new Notice(`JiraIssue: Logged as ${loggedUser.displayName}`)
+                            new Notice(`Jira Shadow: Logged as ${loggedUser.displayName}`)
                         } catch (e) {
-                            new Notice('JiraIssue: Logged as Guest')
-                            console.error('JiraIssue:TestConnection', e)
+                            new Notice('Jira Shadow: Logged as Guest')
+                            console.error('Jira Shadow:TestConnection', e)
                         }
                     } catch (e) {
-                        console.error('JiraIssue:TestConnection', e)
-                        new Notice('JiraIssue: Connection failed!')
+                        console.error('Jira Shadow:TestConnection', e)
+                        new Notice('Jira Shadow: Connection failed!')
                     }
                     button.setButtonText("Test Connection")
                     button.setDisabled(false)
@@ -455,149 +459,6 @@ export class JiraIssueSettingTab extends PluginSettingTab {
                 .onChange(async value => {
                     SettingsData.colorSchema = value as EColorSchema
                     await this.saveSettings()
-                }))
-
-        new Setting(containerEl)
-            .setName('Issue url to tags')
-            .setDesc(`Convert links to issues to tags. Example: ${SettingsData.accounts[0].host}/browse/AAA-123`)
-            .addToggle(toggle => toggle
-                .setValue(SettingsData.inlineIssueUrlToTag)
-                .onChange(async value => {
-                    SettingsData.inlineIssueUrlToTag = value
-                    await this.saveSettings()
-                }))
-
-        const inlineIssuePrefixDesc = (prefix: string) => 'Prefix to use when rendering inline issues. Keep this field empty to disable this feature. '
-            + (prefix ? `Example: ${prefix}AAA-123` : 'Feature disabled.')
-        const inlineIssuePrefixSetting = new Setting(containerEl)
-            .setName('Inline issue prefix')
-            .setDesc(inlineIssuePrefixDesc(SettingsData.inlineIssuePrefix))
-            .addText(text => text
-                .setValue(SettingsData.inlineIssuePrefix)
-                .onChange(async value => {
-                    SettingsData.inlineIssuePrefix = value
-                    inlineIssuePrefixSetting.setDesc(inlineIssuePrefixDesc(SettingsData.inlineIssuePrefix))
-                    await this.saveSettings()
-                }))
-        new Setting(containerEl)
-            .setName('Show color band')
-            .setDesc('Display color band near by inline issue to simplify the account identification.')
-            .addToggle(toggle => toggle
-                .setValue(SettingsData.showColorBand)
-                .onChange(async value => {
-                    SettingsData.showColorBand = value
-                    await this.saveSettings()
-                }))
-
-        new Setting(containerEl)
-            .setName('Show Jira link')
-            .setDesc('Make the result count in jira-search a link to the jira project with the jql from the search.')
-            .addToggle(toggle => toggle
-                .setValue(SettingsData.showJiraLink)
-                .onChange(async value => {
-                    SettingsData.showJiraLink = value
-                    await this.saveSettings()
-                }))
-    }
-
-    displaySearchColumnsSettings(isSearchColumnsDetailsOpen: boolean) {
-        const { containerEl } = this
-        containerEl.createEl('h3', { text: 'Search columns' })
-
-        const desc = document.createDocumentFragment()
-        desc.append(
-            "Columns to display in the jira-search table visualization.",
-        )
-        new Setting(containerEl).setDesc(desc)
-        this._searchColumnsDetails = containerEl.createEl('details',
-            { attr: isSearchColumnsDetailsOpen ? { open: true } : {} }
-        )
-        this._searchColumnsDetails.createEl('summary', { text: 'Show/Hide columns' })
-        SettingsData.searchColumns.forEach((column, index) => {
-            const setting = new Setting(this._searchColumnsDetails)
-                .addDropdown(dropdown => dropdown
-                    .addOptions(SEARCH_COLUMNS_DESCRIPTION)
-                    .setValue(column.type)
-                    .onChange(async value => {
-                        SettingsData.searchColumns[index].type = value as ESearchColumnsTypes
-                        await this.saveSettings()
-                        // Force refresh
-                        this.display()
-                    }).selectEl.addClass('flex-grow-1')
-                )
-
-            // if (column.type === ESearchColumnsTypes.CUSTOM) {
-            //     setting.addText(text => text
-            //         .setPlaceholder('Custom field name')
-            //         .setValue(column.customField)
-            //         .onChange(async value => {
-            //             settingData.searchColumns[index].customField = value
-            //             await this.saveSettings()
-            //         }).inputEl.addClass('custom-field-text')
-            //     )
-            // }
-            setting.addExtraButton(button => button
-                .setIcon(SettingsData.searchColumns[index].compact ? 'compress-glyph' : 'enlarge-glyph')
-                .setTooltip(SettingsData.searchColumns[index].compact ? 'Compact' : 'Full width')
-                .onClick(async () => {
-                    SettingsData.searchColumns[index].compact = !SettingsData.searchColumns[index].compact
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
-                }))
-            setting.addExtraButton(button => button
-                .setIcon('up-chevron-glyph')
-                .setTooltip('Move up')
-                .setDisabled(index === 0)
-                .onClick(async () => {
-                    const tmp = SettingsData.searchColumns[index]
-                    SettingsData.searchColumns[index] = SettingsData.searchColumns[index - 1]
-                    SettingsData.searchColumns[index - 1] = tmp
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
-                }))
-            setting.addExtraButton(button => button
-                .setIcon('down-chevron-glyph')
-                .setTooltip('Move down')
-                .setDisabled(index === SettingsData.searchColumns.length - 1)
-                .onClick(async () => {
-                    const tmp = SettingsData.searchColumns[index]
-                    SettingsData.searchColumns[index] = SettingsData.searchColumns[index + 1]
-                    SettingsData.searchColumns[index + 1] = tmp
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
-                }))
-            setting.addExtraButton(button => button
-                .setIcon('trash')
-                .setTooltip('Delete')
-                .onClick(async () => {
-                    SettingsData.searchColumns.splice(index, 1)
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
-                }))
-            setting.infoEl.remove()
-        })
-        new Setting(this._searchColumnsDetails)
-            .addButton(button => button
-                .setButtonText("Reset columns")
-                .setWarning()
-                .onClick(async value => {
-                    SettingsData.searchColumns = [...DEFAULT_SETTINGS.searchColumns]
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
-                }))
-            .addButton(button => button
-                .setButtonText("Add Column")
-                .setCta()
-                .onClick(async value => {
-                    SettingsData.searchColumns.push({ type: ESearchColumnsTypes.KEY, compact: false })
-                    await this.saveSettings()
-                    // Force refresh
-                    this.display()
                 }))
     }
 

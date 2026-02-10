@@ -1,7 +1,7 @@
 import { FrontMatterCache, TFile } from "obsidian"
 import { IJiraIssue } from "../interfaces/issueInterfaces"
 import { EColorSchema, IJiraIssueAccountSettings } from "../interfaces/settingsInterfaces"
-import { ObsidianApp } from "../main"
+import { ObsidianApp } from "../globals"
 import { SearchView } from "../searchView"
 import { SettingsData } from "../settings"
 
@@ -72,7 +72,7 @@ export default {
     },
 
     renderContainer(children: HTMLElement[]): HTMLElement {
-        const container = createDiv({ cls: 'jira-issue-container' })
+        const container = createDiv({ cls: 'jira-shadow-container' })
         for (const child of children) {
             container.appendChild(child)
         }
@@ -135,8 +135,6 @@ export default {
     },
 
     renderAccountColorBand(account: IJiraIssueAccountSettings, parent: HTMLDivElement) {
-        if (SettingsData.showColorBand) {
-            createSpan({ cls: `ji-tag ${this.getTheme()} ji-band`, attr: { style: `background-color: ${account.color}` }, title: account.alias, parent: parent })
-        }
+        // Feature disabled
     },
 }

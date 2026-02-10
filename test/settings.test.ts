@@ -25,17 +25,10 @@ const StoredSettings = {
     },
     cacheTime: 'cacheTimeVal',
     colorSchema: EColorSchema.LIGHT,
-    inlineIssuePrefix: 'inlineIssuePrefixVal',
-    inlineIssueUrlToTag: true,
     logImagesFetch: false,
     logRequestsResponses: true,
-    searchColumns: [
-        // { type: ESearchColumnsTypes.KEY, compact: true },
-        // { type: ESearchColumnsTypes.CUSTOM_FIELD, compact: false, extra: 'customVal' },
-    ],
+    savedQueries: [],
     searchResultsLimit: 99,
-    showColorBand: true,
-    showJiraLink: true,
 } as IJiraIssueSettings
 
 describe('Settings', () => {

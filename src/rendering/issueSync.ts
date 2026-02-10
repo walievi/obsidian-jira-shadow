@@ -1,13 +1,13 @@
 import { TFile, Notice, normalizePath } from "obsidian"
 import { IJiraIssue } from "../interfaces/issueInterfaces"
 import { ISearchColumn, ESearchColumnsTypes, SEARCH_COLUMNS_DESCRIPTION, IJiraIssueAccountSettings } from "../interfaces/settingsInterfaces"
-import { ObsidianApp } from "../main"
+import { ObsidianApp } from "../globals"
 import RC from "./renderingCommon"
 import { getIssueStringValue } from "./valueExtractor"
 import { SearchView } from "../searchView"
 
-export const JIRA_ISSUE_START_MARKER = '<!-- jira-issue-start -->'
-export const JIRA_ISSUE_END_MARKER = '<!-- jira-issue-end -->'
+export const JIRA_ISSUE_START_MARKER = '<!-- jira-shadow-start -->'
+export const JIRA_ISSUE_END_MARKER = '<!-- jira-shadow-end -->'
 
 export async function syncIssueContent(
     issue: IJiraIssue, 

@@ -1,94 +1,68 @@
-# Obsidian jira-issue
-![Test Status](https://github.com/marc0l92/obsidian-jira-issue/actions/workflows/ci.yaml/badge.svg)
+# Jira Shadow
 
+![Version](https://img.shields.io/badge/version-1.58.1-blue) ![Obsidian](https://img.shields.io/badge/Obsidian-%3E%3D0.15.0-purple)
 
-This plugin allows you to track the progress of [Atlassian Jira](https://www.atlassian.com/software/jira) issues from your [Obsidian.md](https://obsidian.md/) notes.
+**Jira Shadow** is a specialized Obsidian plugin designed to **sync** ("shadow") Jira issues into your vault as real Markdown files.
 
-<a href='https://ko-fi.com/marc0l92' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png' border='0' alt='Buy Me a Coffee'></a>
+Unlike other plugins that primarily *render* Jira data dynamically, **Jira Shadow** creates actual files on your disk. This approach unlocks the full potential of Obsidian's local-first architecture.
 
-![issues](./assets/issues.png)
+## Why "Shadow"?
 
-![searchResults](./assets/searchResults2.png)
+By importing Jira issues as tangible Markdown files, you gain:
+- **Offline Access**: View and edit your issues without an internet connection.
+- **Graph Integration**: Visualize relationships between your tasks and your knowledge base using the Graph View.
+- **Backlinking**: Link directly to specific Jira tickets using standard `[[Wikilinks]]`.
+- **Native Search**: Leverage Obsidian's blazing fast search to find issues instantly.
+- **Frontmatter Metadata**: Jira fields are automatically synced as YAML frontmatter properties, making them queryable by plugins like Dataview.
 
-## Documentation
-Check out the complete [documentation](https://marc0l92.github.io/obsidian-jira-issue) to start using Jira-Issue.
+**Compatibility Note:** This plugin uses a unique ID (`jira-shadow`) and is engineered to run **side-by-side** with the original `obsidian-jira-issue` plugin. You can use the original plugin for dynamic views and **Jira Shadow** for robust file syncing without any conflicts.
+
+## Key Features
+
+### 🗂️ JQL Query Manager
+Manage your Jira workflows directly from a dedicated sidebar view.
+- **Saved Filters**: Create and save complex JQL queries (e.g., "My High Priority Bugs").
+- **Flexible Destinations**: Route different queries to specific folders (e.g., `/Work/Bugs` vs `/Work/Features`).
+- **Custom Content**: Control which Jira fields are written to the file body.
+
+### 🔄 Intelligent Sync
+- **One-Click Updates**: Sync all issues matching your filters with a single button press.
+- **Smart Updates**: Re-syncing updates the issue content and metadata while preserving your local links.
+- **Sync Fences**: Use ````jira-shadow-sync```` blocks in your notes to render dynamic lists that can trigger syncs.
 
 ## Installation
-From the obsidian app go in `Settings > Third-party plugins > Community Plugins > Browse` and search for `jira-issue`.
 
-[Read more...](https://marc0l92.github.io/obsidian-jira-issue/docs/get-started/installation)
+1.  Download the latest release (`main.js`, `manifest.json`, `styles.css`).
+2.  Create a folder named `jira-shadow` in your vault's `.obsidian/plugins/` directory.
+3.  Move the downloaded files into that folder.
+4.  Enable **Jira Shadow** in **Settings > Community Plugins**.
 
 ## Configuration
 
-Use the plugin options to configure the connection to your Atlassian Jira server: host, username and password.
+1.  Navigate to **Settings > Jira Shadow**.
+2.  **Add Account**:
+    - **Name**: A friendly identifier (e.g., "Corporate Jira").
+    - **Host**: Your Jira instance URL (e.g., `https://your-company.atlassian.net`).
+    - **Username**: Your Jira email address.
+    - **API Token**: Generate a token at [id.atlassian.com](https://id.atlassian.com/manage-profile/security/api-tokens).
 
-[Read more...](https://marc0l92.github.io/obsidian-jira-issue/docs/get-started/basic-authentication)
+## Usage Guide
 
-## Markdown Syntax
+### 1. Open the Sidebar
+Click the **Jira Shadow** icon (magnifying glass) in the right ribbon or run the command `Jira Shadow: Open Jira Shadow Sidebar`.
 
-The plugin support the following components:
+### 2. Create a Filter
+- Click **New Filter**.
+- **Name**: "Sprint Tasks"
+- **JQL Query**: `project = "PROJ" AND sprint in openSprints() AND assignee = currentUser()`
+- **Destination**: `Projects/Current Sprint`
+- **File Columns**: `description, priority, due, assignee`
+- Click **Save**.
 
-### 📃`jira-issue`:
-- [Documentation](https://marc0l92.github.io/obsidian-jira-issue/docs/components/jira-issue)
-- Example:
-````
-```jira-issue
-AAA-111
-AAA-222
-https://my.jira-server.com/browse/BBB-333
-# This is a comment
-```
-````
-
-### 🔎`jira-search`
-- [Documentation](https://marc0l92.github.io/obsidian-jira-issue/docs/components/jira-search)
-- Simple example:
-````
-```jira-search
-resolution = Unresolved AND assignee = currentUser() AND status = 'In Progress' order by priority DESC
-    ```
-````
-- Advanced example:
-````
-```jira-search
-type: TABLE
-query: status = 'In Progress' order by priority DESC
-limit: 15
-columns: KEY, SUMMARY, -ASSIGNEE, -REPORTER, STATUS, NOTES
-```
-````
-
-### 🔢`jira-count`
-- [Documentation](https://marc0l92.github.io/obsidian-jira-issue/docs/components/jira-count)
-- Example:
-````
-```jira-count
-project = REF AND status changed to (Done, "Won't Fix", Archived, "Can't Reproduce", "PM Validated") after -14d
-```
-````
-
-### 🏷️Inline issues
-- [Documentation](https://marc0l92.github.io/obsidian-jira-issue/docs/components/inline-issue)
-- Example:
-````
-With inline issue you can insert an issue like JIRA:OPEN-351 inside your text.
-The plugin will detect urls like https://jira.secondlife.com/browse/OPEN-352 and render the issue as tags.
-- [ ] Issue can be extended JIRA:OPEN-353 with the summary
-- [x] Or compact JIRA:-OPEN-354 without the summary
-- [ ] JIRA:-OPEN-355 use the `-` symbol before the issue key to make it compact
-```
-The plugin searches inside the note for those patterns and replace them
-JIRA:-OPEN-356
-```
-````
-![Inline issues](./assets/inlineIssues.png)
-
-## Contribution and Feedbacks
-
-Feel free to share your experiences, feedbacks and suggestions in the by opening a GitHub issue.
-
-Pull requests are welcome.
+### 3. Sync Issues
+- Click **Search** to preview the results.
+- (Coming Soon) Click the Sync button to download all matching issues as markdown files.
 
 ## License
 
-Jira-Issue is licensed under the GNU AGPLv3 license. Refer to [LICENSE](https://github.com/marc0l92/obsidian-jira-issue/blob/master/LICENSE) for more information.
+Jira Shadow is licensed under the GNU AGPLv3 license.
