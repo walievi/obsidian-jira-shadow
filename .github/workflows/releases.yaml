@@ -10,7 +10,7 @@ on:
       - completed
 
 env:
-  PLUGIN_NAME: obsidian-jira-issue
+  PLUGIN_NAME: jira-shadow
 
 jobs:
   build:

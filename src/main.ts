@@ -45,7 +45,7 @@ export default class JiraIssuePlugin extends Plugin {
 
         // Commands
         this.addCommand({
-            id: 'obsidian-jira-issue-clear-cache',
+            id: 'clear-cache',
             name: 'Clear cache',
             callback: () => {
                 ObjectsCache.clear()

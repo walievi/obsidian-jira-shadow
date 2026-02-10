@@ -1,6 +1,6 @@
 {
     "name": "jira-shadow",
-    "version": "1.58.1",
+    "version": "1.0.0",
     "description": "A specialized fork of obsidian-jira-issue for syncing issues to local files.",
     "main": "src/main.js",
     "scripts": {

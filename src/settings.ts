@@ -141,7 +141,7 @@ export class JiraIssueSettingTab extends PluginSettingTab {
         description.appendText('Need help? Explore the ')
         description.appendChild(createEl('a', {
             text: 'Jira Shadow documentation',
-            href: 'https://marc0l92.github.io/obsidian-jira-issue/',
+            href: 'https://github.com/walievi/obsidian-jira-shadow',
         }))
         description.appendText('.')
 
