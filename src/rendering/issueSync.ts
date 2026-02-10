@@ -34,7 +34,7 @@ export async function syncIssueContent(
     const now = new Date().toISOString()
     
     // Frontmatter updates
-    const frontmatterUpdates: Record<string, any> = {
+    const frontmatterUpdates: Record<string, unknown> = {
         'jira_key': issue.key,
         'jira_link': issueUrl,
         'jira_updated': now

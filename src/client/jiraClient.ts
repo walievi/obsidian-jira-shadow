@@ -93,6 +93,7 @@ function isTextResponse(response: RequestUrlResponse): boolean {
     return response.headers && response.headers['content-type'] && response.headers['content-type'].includes('text') && response.text !== undefined
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function sendRequest(requestOptions: RequestOptions): Promise<any> {
     let response: RequestUrlResponse
     if (requestOptions.account) {
@@ -140,6 +141,7 @@ async function sendRequest(requestOptions: RequestOptions): Promise<any> {
                 throw new Error(`Jira API ${response.status} Error: ${errorMsg}`)
         }
     } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         throw new Error(response as any)
     }
 }

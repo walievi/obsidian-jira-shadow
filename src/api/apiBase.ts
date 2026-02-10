@@ -14,6 +14,7 @@ function cacheWrapper<TFunc extends (...args: unknown[]) => unknown>(func: TFunc
         if (cacheVal) {
             return cacheVal.data as InferReturn<TFunc>
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const returnValue = func(...args as any[])
         ObjectsCache.add(cacheKey, returnValue)
         return returnValue as InferReturn<TFunc>

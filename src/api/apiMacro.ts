@@ -1,7 +1,9 @@
 import { ESprintState, IJiraSprint, IJiraWorklog, ISeries } from "../interfaces/issueInterfaces"
 import API from "./api"
 import { moment as moment_ } from "obsidian"
-const moment = moment_ as any
+// @ts-ignore
+import momentjs from "moment"
+const moment = moment_ as unknown as typeof momentjs
 import ms from "ms"
 
 function dateTimeToDate(dateTime: string): string {

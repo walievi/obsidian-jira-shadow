@@ -288,29 +288,27 @@ const buildEmptyIssue = (): IJiraIssue => JSON.parse(JSON.stringify({
     },
 } as IJiraIssue))
 
-function isObject(item: any): boolean {
+function isObject(item: unknown): boolean {
     return (item && typeof item === 'object' && !Array.isArray(item))
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mergeDeep(target: any, ...sources: any[]): any {
     if (!sources.length) return target
     const source = sources.shift()
 
     if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-            if (isObject(source[key])) {
-                if (!target[key]) {
-                    Object.assign(target, {
-                        [key]: {}
-                    })
-                }
-                mergeDeep(target[key], source[key])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        for (const key in source as any) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (isObject((source as any)[key])) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (!(target as any)[key]) Object.assign(target, { [key]: {} })
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                mergeDeep((target as any)[key], (source as any)[key])
             } else {
-                if (source[key]) {
-                    Object.assign(target, {
-                        [key]: source[key]
-                    })
-                }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                Object.assign(target, { [key]: (source as any)[key] })
             }
         }
     }
