@@ -1,6 +1,6 @@
 # Jira Shadow
 
-![Version](https://img.shields.io/badge/version-1.58.1-blue) ![Obsidian](https://img.shields.io/badge/Obsidian-%3E%3D0.15.0-purple)
+![Version](https://img.shields.io/badge/version-1.0.0-blue) ![Obsidian](https://img.shields.io/badge/Obsidian-%3E%3D0.12.0-purple)
 
 **Jira Shadow** is a specialized Obsidian plugin designed to **sync** ("shadow") Jira issues into your vault as real Markdown files.
 
