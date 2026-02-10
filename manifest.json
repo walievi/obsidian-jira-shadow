@@ -3,7 +3,7 @@
   "name": "Jira Shadow",
   "version": "1.0.0",
   "minAppVersion": "0.12.0",
-  "description": "A fork of jira-issue plugin focused on syncing Jira queries to local files via a dedicated sidebar view.",
+  "description": "A fork of jira-issue (marc0l92) focused on syncing Jira queries to local files via a dedicated sidebar view.",
   "author": "walievi",
   "authorUrl": "https://github.com/walievi",
   "fundingUrl": "https://ko-fi.com/walievi",
