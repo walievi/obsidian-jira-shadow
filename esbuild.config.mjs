@@ -6,7 +6,7 @@ const prod = (process.argv[2] === 'production')
 
 esbuild.build({
   banner: {
-    js: 'Project: https://github.com/walievi/obsidian-jira-shadow',
+    js: '// Project: https://github.com/walievi/obsidian-jira-shadow',
   },
   entryPoints: ['src/main.ts'],
   bundle: true,
@@ -45,4 +45,7 @@ esbuild.build({
     '.svg': 'text',
   },
   outfile: 'main.js',
+  footer: {
+    js: 'module.exports = JiraIssuePlugin;',
+  },
 }).catch(() => process.exit(1))
